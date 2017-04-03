@@ -1,0 +1,429 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>daskec2_legacy.ec2 &#8212; daskEc2  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for daskec2_legacy.ec2</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="k">import</span> <span class="n">ClientError</span><span class="p">,</span> <span class="n">WaiterError</span>
+<span class="kn">from</span> <span class="nn">dask_ec2.exceptions</span> <span class="k">import</span> <span class="n">DaskEc2Exception</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
+
+<span class="n">DEFAULT_SG_GROUP_NAME</span> <span class="o">=</span> <span class="s2">&quot;dask-ec2-default&quot;</span>
+
+
+<div class="viewcode-block" id="EC2"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2">[docs]</a><span class="k">class</span> <span class="nc">EC2</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">vpc_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subnet_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_vpc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">default_subnet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">iaminstance_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s2">&quot;ec2&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">region</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;ec2&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">region</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vpc_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_vpc</span><span class="p">()</span> <span class="k">if</span> <span class="n">default_vpc</span> <span class="k">else</span> <span class="n">vpc_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subnet_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_subnet</span><span class="p">()</span> <span class="k">if</span> <span class="n">default_subnet</span> <span class="k">else</span> <span class="n">subnet_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iaminstance_name</span> <span class="o">=</span> <span class="n">iaminstance_name</span>
+
+        <span class="k">if</span> <span class="n">test</span><span class="p">:</span>
+            <span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span><span class="o">.</span><span class="n">instances</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Filters</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="s2">&quot;instance-state-name&quot;</span><span class="p">,</span> <span class="s2">&quot;Values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;running&quot;</span><span class="p">]}])</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EC2.get_default_vpc"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.get_default_vpc">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_vpc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the default VPC of the account.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">            If there is not a default VPC</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Searching for default VPC&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">vpc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span><span class="o">.</span><span class="n">vpcs</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">vpc</span><span class="o">.</span><span class="n">is_default</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Default VPC found - Using VPC ID: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">vpc</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">vpc</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">raise</span> <span class="n">DaskEc2Exception</span><span class="p">(</span><span class="s2">&quot;There is no default VPC, please pass VPC ID&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EC2.get_default_subnet"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.get_default_subnet">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_subnet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">availability_zone</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the default subnet on the VPC ID.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">            If there is not a default subnet on the VPC</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Searching for default subnet in VPC </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vpc_id</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">vpc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span><span class="o">.</span><span class="n">vpcs</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">vpc</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">vpc_id</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="n">vpc</span><span class="o">.</span><span class="n">subnets</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">availability_zone</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">subnet</span><span class="o">.</span><span class="n">default_for_az</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Default subnet found - Using Subnet ID: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">subnet</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">subnet</span><span class="o">.</span><span class="n">id</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">subnet</span><span class="o">.</span><span class="n">availability_zone</span> <span class="o">==</span> <span class="n">availability_zone</span> <span class="ow">and</span> <span class="n">subnet</span><span class="o">.</span><span class="n">default_for_az</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Default subnet found - Using Subnet ID: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">subnet</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">subnet</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">raise</span> <span class="n">DaskEc2Exception</span><span class="p">(</span><span class="s2">&quot;There is no default subnet on VPC </span><span class="si">%s</span><span class="s2">, please pass a subnet ID&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">vpc_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EC2.check_keyname"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.check_keyname">[docs]</a>    <span class="k">def</span> <span class="nf">check_keyname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks that a keyname exists on the EC2 account&quot;</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">            DaskEc2Exception if the keyname doesn&#39;t exists</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Checking that keyname &#39;</span><span class="si">%s</span><span class="s2">&#39; exists on EC2&quot;</span><span class="p">,</span> <span class="n">keyname</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">key_pair</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">describe_key_pairs</span><span class="p">(</span><span class="n">KeyNames</span><span class="o">=</span><span class="p">[</span><span class="n">keyname</span><span class="p">])</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">key_pair</span><span class="p">]</span>
+        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">error_code</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">error_code</span> <span class="o">==</span> <span class="s2">&quot;InvalidKeyPair.NotFound&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">DaskEc2Exception</span><span class="p">(</span><span class="s2">&quot;The keyname &#39;</span><span class="si">%s</span><span class="s2">&#39; does not exist, please create it in the EC2 console&quot;</span> <span class="o">%</span> <span class="n">keyname</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">e</span></div>
+
+<div class="viewcode-block" id="EC2.get_security_groups"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.get_security_groups">[docs]</a>    <span class="k">def</span> <span class="nf">get_security_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">security_group_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the security group (if exists) in the VPC ID</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        security_group_name : str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Getting all security groups and filtering by VPC ID </span><span class="si">%s</span><span class="s2"> and name </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vpc_id</span><span class="p">,</span>
+                     <span class="n">security_group_name</span><span class="p">)</span>
+        <span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span><span class="o">.</span><span class="n">security_groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vpc_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">matches</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">vpc_id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">vpc_id</span> <span class="ow">and</span> <span class="n">m</span><span class="o">.</span><span class="n">group_name</span> <span class="o">==</span> <span class="n">security_group_name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">matches</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group_name</span> <span class="o">==</span> <span class="n">security_group_name</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found Security groups: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">matches</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">matches</span></div>
+
+<div class="viewcode-block" id="EC2.get_security_groups_ids"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.get_security_groups_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_security_groups_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">security_groups</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the security group ids (if exists) for the security group names in the VPC</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_security_groups</span><span class="p">(</span><span class="n">security_groups</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="EC2.check_sg"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.check_sg">[docs]</a>    <span class="k">def</span> <span class="nf">check_sg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">security_group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks if the security groups exists in the EC2 account</span>
+<span class="sd">        If security_group is the default one it will create it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Checking that security group &#39;</span><span class="si">%s</span><span class="s2">&#39; exists on EC2&quot;</span><span class="p">,</span> <span class="n">security_group</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_security_groups</span><span class="p">(</span><span class="n">security_group</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">sg</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">security_group</span> <span class="o">==</span> <span class="n">DEFAULT_SG_GROUP_NAME</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Default security group &#39;</span><span class="si">%s</span><span class="s2">&#39; not found, creating it&quot;</span><span class="p">,</span> <span class="n">DEFAULT_SG_GROUP_NAME</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">create_default_sg</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">DaskEc2Exception</span><span class="p">(</span><span class="s2">&quot;Security group &#39;</span><span class="si">%s</span><span class="s2">&#39; not found, please create or use the default &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
+                                           <span class="p">(</span><span class="n">security_group</span><span class="p">,</span> <span class="n">DEFAULT_SG_GROUP_NAME</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DaskEc2Exception</span><span class="p">(</span><span class="s2">&quot;Security group &#39;</span><span class="si">%s</span><span class="s2">&#39; not found, please create or use the default &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
+                                   <span class="p">(</span><span class="n">security_group</span><span class="p">,</span> <span class="n">DEFAULT_SG_GROUP_NAME</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="EC2.create_default_sg"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.create_default_sg">[docs]</a>    <span class="k">def</span> <span class="nf">create_default_sg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the default security group with very open settings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Creating default (very open) security group &#39;</span><span class="si">%s</span><span class="s2">&#39; on VPC </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">DEFAULT_SG_GROUP_NAME</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vpc_id</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vpc_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create_security_group</span><span class="p">(</span><span class="n">GroupName</span><span class="o">=</span><span class="n">DEFAULT_SG_GROUP_NAME</span><span class="p">,</span>
+                                                      <span class="n">Description</span><span class="o">=</span><span class="s2">&quot;Default security group for adam&quot;</span><span class="p">,</span>
+                                                      <span class="n">VpcId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vpc_id</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create_security_group</span><span class="p">(</span><span class="n">GroupName</span><span class="o">=</span><span class="n">DEFAULT_SG_GROUP_NAME</span><span class="p">,</span>
+                                                      <span class="n">Description</span><span class="o">=</span><span class="s2">&quot;Default security group for adam&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">error_code</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">error_code</span> <span class="o">==</span> <span class="s2">&quot;InvalidGroup.Duplicate&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Default security group already exists&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">e</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Setting up default values for the &#39;</span><span class="si">%s</span><span class="s2">&#39; security group&quot;</span><span class="p">,</span> <span class="n">DEFAULT_SG_GROUP_NAME</span><span class="p">)</span>
+        <span class="n">security_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_security_groups</span><span class="p">(</span><span class="n">DEFAULT_SG_GROUP_NAME</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">IpPermissions</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;IpProtocol&quot;</span><span class="p">:</span> <span class="s2">&quot;tcp&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;FromPort&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;ToPort&quot;</span><span class="p">:</span> <span class="mi">65535</span><span class="p">,</span>
+                <span class="s2">&quot;IpRanges&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;CidrIp&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0.0/0&quot;</span>
+                    <span class="p">},</span>
+                <span class="p">],</span>
+            <span class="p">},</span> <span class="p">{</span>
+                <span class="s2">&quot;IpProtocol&quot;</span><span class="p">:</span> <span class="s2">&quot;udp&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;FromPort&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;ToPort&quot;</span><span class="p">:</span> <span class="mi">65535</span><span class="p">,</span>
+                <span class="s2">&quot;IpRanges&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;CidrIp&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0.0/0&quot;</span>
+                    <span class="p">},</span>
+                <span class="p">],</span>
+            <span class="p">},</span> <span class="p">{</span>
+                <span class="s2">&quot;IpProtocol&quot;</span><span class="p">:</span> <span class="s2">&quot;icmp&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;FromPort&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;ToPort&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;IpRanges&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;CidrIp&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0.0/0&quot;</span>
+                    <span class="p">},</span>
+                <span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">security_group</span><span class="o">.</span><span class="n">authorize_egress</span><span class="p">(</span><span class="n">IpPermissions</span><span class="o">=</span><span class="n">IpPermissions</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">error_code</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">error_code</span> <span class="o">==</span> <span class="s2">&quot;InvalidPermission.Duplicate&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Outbound Permissions for default security group already set&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">e</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">security_group</span><span class="o">.</span><span class="n">authorize_ingress</span><span class="p">(</span><span class="n">IpPermissions</span><span class="o">=</span><span class="n">IpPermissions</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">error_code</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">error_code</span> <span class="o">==</span> <span class="s2">&quot;InvalidPermission.Duplicate&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Inbound Permissions for default security group already set&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">e</span>
+
+        <span class="k">return</span> <span class="n">security_group</span></div>
+
+<div class="viewcode-block" id="EC2.check_image_is_ebs"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.check_image_is_ebs">[docs]</a>    <span class="k">def</span> <span class="nf">check_image_is_ebs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if AMI is EBS based and raises an exception if not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">describe_images</span><span class="p">(</span><span class="n">ImageIds</span><span class="o">=</span><span class="p">[</span><span class="n">image_id</span><span class="p">])</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">root_type</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;RootDeviceType&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">root_type</span> <span class="o">!=</span> <span class="s2">&quot;ebs&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DaskEc2Exception</span><span class="p">(</span><span class="s2">&quot;The AMI {} Root Device Type is not EBS. Only EBS Root Device AMI are supported.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">image_id</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="EC2.launch"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.launch">[docs]</a>    <span class="k">def</span> <span class="nf">launch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">image_id</span><span class="p">,</span> <span class="n">instance_type</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">keyname</span><span class="p">,</span>
+               <span class="n">security_group_name</span><span class="o">=</span><span class="n">DEFAULT_SG_GROUP_NAME</span><span class="p">,</span>
+               <span class="n">security_group_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">volume_type</span><span class="o">=</span><span class="s2">&quot;gp2&quot;</span><span class="p">,</span>
+               <span class="n">volume_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+               <span class="n">keypair</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">check_ami</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_keyname</span><span class="p">(</span><span class="n">keyname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">check_ami</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_image_is_ebs</span><span class="p">(</span><span class="n">image_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_sg</span><span class="p">(</span><span class="n">security_group_name</span><span class="p">)</span>
+
+        <span class="n">device_map</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;DeviceName&quot;</span><span class="p">:</span> <span class="s2">&quot;/dev/sda1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Ebs&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;VolumeSize&quot;</span><span class="p">:</span> <span class="n">volume_size</span><span class="p">,</span>
+                    <span class="s2">&quot;DeleteOnTermination&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;VolumeType&quot;</span><span class="p">:</span> <span class="n">volume_type</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">security_group_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">security_groups_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">security_group_id</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">security_groups_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_security_groups_ids</span><span class="p">(</span><span class="n">security_group_name</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating </span><span class="si">%i</span><span class="s2"> instances on EC2&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ImageId</span><span class="o">=</span><span class="n">image_id</span><span class="p">,</span>
+                      <span class="n">KeyName</span><span class="o">=</span><span class="n">keyname</span><span class="p">,</span>
+                      <span class="n">MinCount</span><span class="o">=</span><span class="n">count</span><span class="p">,</span>
+                      <span class="n">MaxCount</span><span class="o">=</span><span class="n">count</span><span class="p">,</span>
+                      <span class="n">InstanceType</span><span class="o">=</span><span class="n">instance_type</span><span class="p">,</span>
+                      <span class="n">SecurityGroupIds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">security_groups_ids</span><span class="p">,</span>
+                      <span class="n">BlockDeviceMappings</span><span class="o">=</span><span class="n">device_map</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnet_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnet_id</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;SubnetId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnet_id</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iaminstance_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">iaminstance_name</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;IamInstanceProfile&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">iaminstance_name</span><span class="p">}</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span><span class="o">.</span><span class="n">create_instances</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">]</span>
+        <span class="n">waiter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_waiter</span><span class="p">(</span><span class="s2">&quot;instance_running&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">waiter</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">InstanceIds</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">WaiterError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DaskEc2Exception</span><span class="p">(</span>
+                <span class="s2">&quot;An unexpected error occurred when launching the requested instances.&quot;</span><span class="p">)</span>
+
+        <span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span><span class="o">.</span><span class="n">instances</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">InstanceIds</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">instance</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">collection</span><span class="p">):</span>
+            <span class="n">instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Tagging instance &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">instance</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">tags_</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;Key&quot;</span><span class="p">:</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">:</span> <span class="s2">&quot;{0}-{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">)}]</span>
+                <span class="k">for</span> <span class="n">tag_pair</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">tag_pair</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="n">key</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;Tag&quot;</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">tag_pair</span>
+                    <span class="n">tags_</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;Key&quot;</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span><span class="o">.</span><span class="n">create_tags</span><span class="p">(</span><span class="n">Resources</span><span class="o">=</span><span class="p">[</span><span class="n">instance</span><span class="o">.</span><span class="n">id</span><span class="p">],</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags_</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Launched instances: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span></div>
+
+<div class="viewcode-block" id="EC2.start_static"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.start_static">[docs]</a>    <span class="k">def</span> <span class="nf">start_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ids</span><span class="p">,</span><span class="n">additional_info</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Starting stopped instances on EC2&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Starting instances: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">start_instances</span><span class="p">(</span>
+            <span class="n">InstanceIds</span> <span class="o">=</span> <span class="n">ids</span><span class="p">,</span>
+            <span class="n">AdditionalInfo</span> <span class="o">=</span> <span class="n">additional_info</span><span class="p">,</span>
+            <span class="n">DryRun</span> <span class="o">=</span> <span class="n">dry_run</span>
+        <span class="p">)</span>
+        <span class="n">waiter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_waiter</span><span class="p">(</span><span class="s2">&quot;instance_running&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">waiter</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">InstanceIds</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">WaiterError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DaskEc2Exception</span><span class="p">(</span>
+                <span class="s2">&quot;An unexpected error occurred when starting the requested instances.&quot;</span><span class="p">)</span>
+
+        <span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span><span class="o">.</span><span class="n">instances</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">InstanceIds</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">instance</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">collection</span><span class="p">):</span>
+            <span class="n">instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span></div>
+
+<div class="viewcode-block" id="EC2.stop_static"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.stop_static">[docs]</a>    <span class="k">def</span> <span class="nf">stop_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ids</span><span class="p">,</span><span class="n">force</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stopping daily instances on EC2&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stopping instances: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">stop_instances</span><span class="p">(</span>
+            <span class="n">InstanceIds</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span>
+            <span class="n">Force</span> <span class="o">=</span> <span class="n">force</span><span class="p">,</span>
+            <span class="n">DryRun</span><span class="o">=</span><span class="n">dry_run</span>
+        <span class="p">)</span>
+        <span class="n">waiter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_waiter</span><span class="p">(</span><span class="s2">&quot;instance_stopped&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">waiter</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">InstanceIds</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">WaiterError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DaskEc2Exception</span><span class="p">(</span>
+                <span class="s2">&quot;An unexpected error occurred when stopping the requested instances.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EC2.get_daily"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.get_daily">[docs]</a>    <span class="k">def</span> <span class="nf">get_daily</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ids</span><span class="p">):</span>
+        <span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span><span class="o">.</span><span class="n">instances</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">InstanceIds</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">instance</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">collection</span><span class="p">):</span>
+            <span class="n">instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span></div>
+
+<div class="viewcode-block" id="EC2.destroy"><a class="viewcode-back" href="../../daskec2_legacy.html#daskec2_legacy.ec2.EC2.destroy">[docs]</a>    <span class="k">def</span> <span class="nf">destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Terminate a set of EC2 instances by ID</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ids : list of strings</span>
+<span class="sd">            The EC2 ids of the instances that should be terminated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Terminating instances on EC2&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ids</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ids</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="k">raise</span> <span class="n">DaskEc2Exception</span><span class="p">(</span><span class="s2">&quot;Instances ids cannot be None or empty list&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Terminating instances: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ec2</span><span class="o">.</span><span class="n">instances</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">InstanceIds</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+        <span class="n">waiter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_waiter</span><span class="p">(</span><span class="s2">&quot;instance_terminated&quot;</span><span class="p">)</span>
+        <span class="n">waiter</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">InstanceIds</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Kang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

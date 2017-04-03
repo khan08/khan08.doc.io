@@ -1,0 +1,30 @@
+cluster package
+===============
+
+Submodules
+----------
+
+cluster\.ec2 module
+-------------------
+
+.. automodule:: cluster.ec2
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+cluster\.ec2Config module
+-------------------------
+
+.. automodule:: cluster.ec2Config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: cluster
+    :members:
+    :undoc-members:
+    :show-inheritance:
