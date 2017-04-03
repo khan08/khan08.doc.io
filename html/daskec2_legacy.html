@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>daskec2_legacy package &#8212; daskEc2  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="daskec2-legacy-package">
+<h1>daskec2_legacy package<a class="headerlink" href="#daskec2-legacy-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="daskec2-legacy-cluster-module">
+<h2>daskec2_legacy.cluster module<a class="headerlink" href="#daskec2-legacy-cluster-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="daskec2-legacy-docker-machine-module">
+<h2>daskec2_legacy.docker_machine module<a class="headerlink" href="#daskec2-legacy-docker-machine-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-daskec2_legacy.ec2">
+<span id="daskec2-legacy-ec2-module"></span><h2>daskec2_legacy.ec2 module<a class="headerlink" href="#module-daskec2_legacy.ec2" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="daskec2_legacy.ec2.EC2">
+<em class="property">class </em><code class="descclassname">daskec2_legacy.ec2.</code><code class="descname">EC2</code><span class="sig-paren">(</span><em>region</em>, <em>vpc_id=None</em>, <em>subnet_id=None</em>, <em>default_vpc=True</em>, <em>default_subnet=True</em>, <em>iaminstance_name=None</em>, <em>test=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.check_image_is_ebs">
+<code class="descname">check_image_is_ebs</code><span class="sig-paren">(</span><em>image_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.check_image_is_ebs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.check_image_is_ebs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if AMI is EBS based and raises an exception if not</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.check_keyname">
+<code class="descname">check_keyname</code><span class="sig-paren">(</span><em>keyname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.check_keyname"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.check_keyname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that a keyname exists on the EC2 account&#8221;</p>
+<blockquote>
+<div>DaskEc2Exception if the keyname doesn&#8217;t exists</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.check_sg">
+<code class="descname">check_sg</code><span class="sig-paren">(</span><em>security_group</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.check_sg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.check_sg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the security groups exists in the EC2 account
+If security_group is the default one it will create it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.create_default_sg">
+<code class="descname">create_default_sg</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.create_default_sg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.create_default_sg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the default security group with very open settings.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.destroy">
+<code class="descname">destroy</code><span class="sig-paren">(</span><em>ids</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.destroy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.destroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Terminate a set of EC2 instances by ID</p>
+<dl class="docutils">
+<dt>ids <span class="classifier-delimiter">:</span> <span class="classifier">list of strings</span></dt>
+<dd>The EC2 ids of the instances that should be terminated</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.get_daily">
+<code class="descname">get_daily</code><span class="sig-paren">(</span><em>ids</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.get_daily"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.get_daily" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.get_default_subnet">
+<code class="descname">get_default_subnet</code><span class="sig-paren">(</span><em>availability_zone=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.get_default_subnet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.get_default_subnet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default subnet on the VPC ID.</p>
+<blockquote>
+<div>If there is not a default subnet on the VPC</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.get_default_vpc">
+<code class="descname">get_default_vpc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.get_default_vpc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.get_default_vpc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default VPC of the account.</p>
+<blockquote>
+<div>If there is not a default VPC</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.get_security_groups">
+<code class="descname">get_security_groups</code><span class="sig-paren">(</span><em>security_group_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.get_security_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.get_security_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the security group (if exists) in the VPC ID</p>
+<p>security_group_name : str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.get_security_groups_ids">
+<code class="descname">get_security_groups_ids</code><span class="sig-paren">(</span><em>security_groups</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.get_security_groups_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.get_security_groups_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the security group ids (if exists) for the security group names in the VPC</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.launch">
+<code class="descname">launch</code><span class="sig-paren">(</span><em>name</em>, <em>image_id</em>, <em>instance_type</em>, <em>count</em>, <em>keyname</em>, <em>security_group_name='dask-ec2-default'</em>, <em>security_group_id=None</em>, <em>volume_type='gp2'</em>, <em>volume_size=500</em>, <em>keypair=None</em>, <em>tags=None</em>, <em>check_ami=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.launch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.launch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.start_static">
+<code class="descname">start_static</code><span class="sig-paren">(</span><em>ids</em>, <em>additional_info</em>, <em>dry_run</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.start_static"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.start_static" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.ec2.EC2.stop_static">
+<code class="descname">stop_static</code><span class="sig-paren">(</span><em>ids</em>, <em>force</em>, <em>dry_run</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/ec2.html#EC2.stop_static"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.ec2.EC2.stop_static" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-daskec2_legacy.exceptions">
+<span id="daskec2-legacy-exceptions-module"></span><h2>daskec2_legacy.exceptions module<a class="headerlink" href="#module-daskec2_legacy.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="daskec2_legacy.exceptions.DaskEc2Exception">
+<em class="property">exception </em><code class="descclassname">daskec2_legacy.exceptions.</code><code class="descname">DaskEc2Exception</code><a class="reference internal" href="_modules/daskec2_legacy/exceptions.html#DaskEc2Exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.exceptions.DaskEc2Exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="daskec2_legacy.exceptions.RetriesExceededException">
+<em class="property">exception </em><code class="descclassname">daskec2_legacy.exceptions.</code><code class="descname">RetriesExceededException</code><span class="sig-paren">(</span><em>function</em>, <em>last_exception=None</em>, <em>message='Retries limit exceeded'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/exceptions.html#RetriesExceededException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.exceptions.RetriesExceededException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#daskec2_legacy.exceptions.DaskEc2Exception" title="daskec2_legacy.exceptions.DaskEc2Exception"><code class="xref py py-class docutils literal"><span class="pre">daskec2_legacy.exceptions.DaskEc2Exception</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="daskec2-legacy-launcher-module">
+<h2>daskec2_legacy.launcher module<a class="headerlink" href="#daskec2-legacy-launcher-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="daskec2-legacy-service-module">
+<h2>daskec2_legacy.service module<a class="headerlink" href="#daskec2-legacy-service-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="daskec2-legacy-sshcluster-module">
+<h2>daskec2_legacy.sshcluster module<a class="headerlink" href="#daskec2-legacy-sshcluster-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-daskec2_legacy.swarm_api">
+<span id="daskec2-legacy-swarm-api-module"></span><h2>daskec2_legacy.swarm_api module<a class="headerlink" href="#module-daskec2_legacy.swarm_api" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="daskec2_legacy.swarm_api.addcmd_token">
+<code class="descclassname">daskec2_legacy.swarm_api.</code><code class="descname">addcmd_token</code><span class="sig-paren">(</span><em>manager_addr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/swarm_api.html#addcmd_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.swarm_api.addcmd_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="daskec2_legacy.swarm_api.swarm_deploy">
+<code class="descclassname">daskec2_legacy.swarm_api.</code><code class="descname">swarm_deploy</code><span class="sig-paren">(</span><em>manager_addr</em>, <em>composefile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/swarm_api.html#swarm_deploy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.swarm_api.swarm_deploy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="daskec2_legacy.swarm_api.swarm_init">
+<code class="descclassname">daskec2_legacy.swarm_api.</code><code class="descname">swarm_init</code><span class="sig-paren">(</span><em>url</em>, <em>manager_addr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/swarm_api.html#swarm_init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.swarm_api.swarm_init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-daskec2_legacy.utils">
+<span id="daskec2-legacy-utils-module"></span><h2>daskec2_legacy.utils module<a class="headerlink" href="#module-daskec2_legacy.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="daskec2_legacy.utils.Table">
+<em class="property">class </em><code class="descclassname">daskec2_legacy.utils.</code><code class="descname">Table</code><span class="sig-paren">(</span><em>data</em>, <em>tabletype=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/utils.html#Table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.utils.Table" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="daskec2_legacy.utils.Table.formatRow">
+<code class="descname">formatRow</code><span class="sig-paren">(</span><em>row</em>, <em>columns</em>, <em>colLengths</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/utils.html#Table.formatRow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.utils.Table.formatRow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.utils.Table.formatRowBorder">
+<code class="descname">formatRowBorder</code><span class="sig-paren">(</span><em>colLengths</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/utils.html#Table.formatRowBorder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.utils.Table.formatRowBorder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="daskec2_legacy.utils.Table.write">
+<code class="descname">write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/utils.html#Table.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.utils.Table.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="daskec2_legacy.utils.setup_logging">
+<code class="descclassname">daskec2_legacy.utils.</code><code class="descname">setup_logging</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/daskec2_legacy/utils.html#setup_logging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#daskec2_legacy.utils.setup_logging" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-daskec2_legacy">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-daskec2_legacy" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">daskec2_legacy package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#daskec2-legacy-cluster-module">daskec2_legacy.cluster module</a></li>
+<li><a class="reference internal" href="#daskec2-legacy-docker-machine-module">daskec2_legacy.docker_machine module</a></li>
+<li><a class="reference internal" href="#module-daskec2_legacy.ec2">daskec2_legacy.ec2 module</a></li>
+<li><a class="reference internal" href="#module-daskec2_legacy.exceptions">daskec2_legacy.exceptions module</a></li>
+<li><a class="reference internal" href="#daskec2-legacy-launcher-module">daskec2_legacy.launcher module</a></li>
+<li><a class="reference internal" href="#daskec2-legacy-service-module">daskec2_legacy.service module</a></li>
+<li><a class="reference internal" href="#daskec2-legacy-sshcluster-module">daskec2_legacy.sshcluster module</a></li>
+<li><a class="reference internal" href="#module-daskec2_legacy.swarm_api">daskec2_legacy.swarm_api module</a></li>
+<li><a class="reference internal" href="#module-daskec2_legacy.utils">daskec2_legacy.utils module</a></li>
+<li><a class="reference internal" href="#module-daskec2_legacy">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/daskec2_legacy.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Kang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/daskec2_legacy.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
