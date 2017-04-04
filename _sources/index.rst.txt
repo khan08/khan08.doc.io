@@ -10,11 +10,56 @@ Welcome to daskEc2's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
-
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+Introduction
+============
+
+Create a dask cluster using docker on AWS.
+You need to use :py:meth:`cluster.ec2.launch`.
+
+Quick Start
+===========
+
+Setup the einvironment. Install boto3 and setup aws access key and secret
+
+.. code-block:: bash
+
+   pip install boto3
+
+Go to ~/.aws/credentials and set the key and secret
+
+.. code-block:: bash
+
+   [default]
+   aws_access_key_id='YOUR_KEY'
+   aws_secret_access_key='YOUR_SECRET'
+
+Checkout the code for cluster launching from private repo.
+
+.. code-block:: bash
+
+   svn checkout https://weih.unfuddle.com/svn/weih_cheq/branches/daskec2/clusterAPI/cluster [local-path]
+
+Run the launcher
+
+.. code-block:: python
+
+   from cluster import ec2
+   manager = ec2.launch(n=1, instance_type='t2.micro')
+
+Browse to notebook when manager is ready. *https://manager.public_ip_address:8888*
+
+To Do
+=====
+
+* Secure connections
+* Automate launch notebook in browser
+* Include spot request features
+* Docker custom define features
