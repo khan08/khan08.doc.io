@@ -10,14 +10,6 @@ Welcome to daskEc2's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-
 Introduction
 ============
 
@@ -63,3 +55,10 @@ To Do
 * Automate launch notebook in browser
 * Include spot request features
 * Docker custom define features
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
