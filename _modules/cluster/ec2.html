@@ -149,21 +149,23 @@
            <div itemprop="articleBody">
             
   <h1>Source code for cluster.ec2</h1><div class="highlight"><pre>
-<span class="kn">import</span> <span class="nn">boto3</span><span class="o">,</span> <span class="nn">botocore</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">sleep</span>
+
+<span class="kn">import</span> <span class="nn">boto3</span>
 <span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="k">import</span> <span class="n">WaiterError</span>
 <span class="kn">from</span> <span class="nn">cluster</span> <span class="k">import</span> <span class="n">ec2Config</span>
-<span class="kn">from</span> <span class="nn">timeout</span> <span class="k">import</span> <span class="n">timeout</span>
+<span class="kn">from</span> <span class="nn">paramiko</span> <span class="k">import</span> <span class="n">ssh_exception</span>
 
-<div class="viewcode-block" id="launch"><a class="viewcode-back" href="../../cluster.html#cluster.ec2.launch">[docs]</a><span class="k">def</span> <span class="nf">launch</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">instance_type</span><span class="p">,</span> <span class="n">image_id</span><span class="o">=</span><span class="n">ec2Config</span><span class="o">.</span><span class="n">IMAGE_ID</span><span class="p">,</span> <span class="n">keyname</span><span class="o">=</span><span class="n">ec2Config</span><span class="o">.</span><span class="n">KEY_NAME</span><span class="p">,</span> <span class="n">sgs</span><span class="o">=</span><span class="n">ec2Config</span><span class="o">.</span><span class="n">SECURITY_GROUPS</span><span class="p">):</span>
+<div class="viewcode-block" id="launch"><a class="viewcode-back" href="../../cluster.html#cluster.ec2.launch">[docs]</a><span class="k">def</span> <span class="nf">launch</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">instance_type</span><span class="p">,</span> <span class="n">keyname</span><span class="p">,</span> <span class="n">key_filename</span><span class="p">,</span> <span class="n">image_id</span><span class="o">=</span><span class="n">ec2Config</span><span class="o">.</span><span class="n">IMAGE_ID</span><span class="p">,</span> <span class="n">sgs</span><span class="o">=</span><span class="n">ec2Config</span><span class="o">.</span><span class="n">SECURITY_GROUPS</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function helps user to launch a dask cluster on aws.</span>
 <span class="sd">    It will launch a t2.micro type instance as the manager node, and launch custom instances as worker nodes.</span>
 
 <span class="sd">    :param n: The number of worker instances</span>
 <span class="sd">    :param instance_type: The type of the worker instances</span>
-
-<span class="sd">    :param image_id: The operating system of the worker instances</span>
 <span class="sd">    :param keyname: The ssh key name of the manager instance</span>
+<span class="sd">    :param key_filename: The .pem path. For example, /.ssh/mykey.pem</span>
+<span class="sd">    :param image_id: The operating system of the worker instances</span>
 <span class="sd">    :param sgs: The security group of the manager and worker instance</span>
 <span class="sd">    :return: returns manager instance with definition as `boto3.EC2.instance &lt;http://boto3.readthedocs.io/en/latest/reference/services/ec2.html#instance&gt;`_</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -198,18 +200,17 @@
 
     <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Startup script logs:&quot;</span><span class="p">)</span>
     <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;tail -f /var/log/cloud-init-output.log&#39;</span>
-    <span class="n">ssh</span><span class="p">(</span><span class="n">command</span><span class="p">,</span><span class="n">instances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">public_ip_address</span><span class="p">)</span>
+    <span class="n">ssh</span><span class="p">(</span><span class="n">command</span><span class="p">,</span><span class="n">instances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">public_ip_address</span><span class="p">,</span><span class="n">key_filename</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">instances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
-<span class="nd">@timeout</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">ssh</span><span class="p">(</span><span class="n">command</span><span class="p">,</span><span class="n">host</span><span class="p">):</span>
+<div class="viewcode-block" id="ssh"><a class="viewcode-back" href="../../cluster.html#cluster.ec2.ssh">[docs]</a><span class="k">def</span> <span class="nf">ssh</span><span class="p">(</span><span class="n">command</span><span class="p">,</span><span class="n">host</span><span class="p">,</span><span class="n">key_filename</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">paramiko</span>
     <span class="n">ssh</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
     <span class="n">ssh</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
     <span class="n">ssh</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">host</span><span class="p">,</span>
                 <span class="n">username</span><span class="o">=</span><span class="s1">&#39;ubuntu&#39;</span><span class="p">,</span>
                 <span class="n">port</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span>
-                <span class="n">key_filename</span><span class="o">=</span><span class="s1">&#39;dask.pem&#39;</span><span class="p">,</span>
+                <span class="n">key_filename</span><span class="o">=</span><span class="n">key_filename</span><span class="p">,</span>
                 <span class="n">compress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">timeout</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
                 <span class="n">banner_timeout</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
@@ -227,16 +228,16 @@
     <span class="nb">print</span> <span class="s1">&#39;exit status: &#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">recv_exit_status</span><span class="p">()</span>
     <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="n">ssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">ssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<span class="nd">@timeout</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">wait_ssh_ready</span><span class="p">(</span><span class="n">ip</span><span class="p">):</span>
+<div class="viewcode-block" id="wait_ssh_ready"><a class="viewcode-back" href="../../cluster.html#cluster.ec2.wait_ssh_ready">[docs]</a><span class="k">def</span> <span class="nf">wait_ssh_ready</span><span class="p">(</span><span class="n">ip</span><span class="p">):</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">ssh</span><span class="p">(</span><span class="s2">&quot;ls&quot;</span><span class="p">,</span><span class="n">ip</span><span class="p">)</span>
             <span class="k">break</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">pass</span>
+        <span class="k">except</span> <span class="n">ssh_exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
 
 </pre></div>
 

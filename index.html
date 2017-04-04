@@ -166,14 +166,29 @@ You need to use <a class="reference internal" href="cluster.html#cluster.ec2.lau
 </div>
 <div class="section" id="quick-start">
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
-<p>Setup the einvironment. Install boto3 and setup aws access key and secret</p>
-<div class="highlight-bash"><div class="highlight"><pre>pip install boto3
+<p>Setup the einvironment. These setups are done only the first time:</p>
+<ul class="simple">
+<li>Install boto3 and paramiko</li>
+<li>Setup aws credential, ssh private key and default region.</li>
+</ul>
+<p>Install requirements.</p>
+<div class="highlight-bash"><div class="highlight"><pre>pip install boto3 paramiko
 </pre></div>
 </div>
-<p>Go to ~/.aws/credentials and set the key and secret</p>
+<p>Create or edit ~/.aws/credentials and set the key and secret</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>default<span class="o">]</span>
 <span class="nv">aws_access_key_id</span><span class="o">=</span><span class="s1">&#39;YOUR_KEY&#39;</span>
 <span class="nv">aws_secret_access_key</span><span class="o">=</span><span class="s1">&#39;YOUR_SECRET&#39;</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair">Create key pair</a> from aws. After this step, you have a</p>
+<ul class="simple">
+<li>Key name</li>
+<li>Private key file</li>
+</ul>
+<p>Create or edit ~/.aws/config and set the default region</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>default<span class="o">]</span>
+<span class="nv">region</span> <span class="o">=</span> us-east-1
 </pre></div>
 </div>
 <p>Checkout the code for cluster launching from private repo.</p>
@@ -182,7 +197,7 @@ You need to use <a class="reference internal" href="cluster.html#cluster.ec2.lau
 </div>
 <p>Run the launcher</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">cluster</span> <span class="kn">import</span> <span class="n">ec2</span>
-<span class="n">manager</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">instance_type</span><span class="o">=</span><span class="s1">&#39;t2.micro&#39;</span><span class="p">)</span>
+<span class="n">manager</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">instance_type</span><span class="o">=</span><span class="s1">&#39;t2.micro&#39;</span><span class="p">,</span><span class="n">keyname</span><span class="o">=&lt;</span><span class="n">YOUR_KEY_NAME</span><span class="o">&gt;</span><span class="p">,</span><span class="n">key_filename</span><span class="o">=&lt;</span><span class="n">YOUR_PEM_FILE</span><span class="o">&gt;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Browse to notebook when manager is ready. <em>https://manager.public_ip_address:8888</em></p>
@@ -190,6 +205,7 @@ You need to use <a class="reference internal" href="cluster.html#cluster.ec2.lau
 <div class="section" id="to-do">
 <h1>To Do<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
+<li>Monitor in seperate thread</li>
 <li>Secure connections</li>
 <li>Automate launch notebook in browser</li>
 <li>Include spot request features</li>

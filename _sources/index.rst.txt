@@ -19,19 +19,36 @@ You need to use :py:meth:`cluster.ec2.launch`.
 Quick Start
 ===========
 
-Setup the einvironment. Install boto3 and setup aws access key and secret
+Setup the einvironment. These setups are done only the first time:
+
+* Install boto3 and paramiko
+* Setup aws credential, ssh private key and default region.
+
+Install requirements.
 
 .. code-block:: bash
 
-   pip install boto3
+   pip install boto3 paramiko
 
-Go to ~/.aws/credentials and set the key and secret
+Create or edit ~/.aws/credentials and set the key and secret
 
 .. code-block:: bash
 
    [default]
    aws_access_key_id='YOUR_KEY'
    aws_secret_access_key='YOUR_SECRET'
+
+`Create key pair <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair>`_ from aws. After this step, you have a
+
+* Key name
+* Private key file
+
+Create or edit ~/.aws/config and set the default region
+
+.. code-block:: bash
+
+   [default]
+   region = us-east-1
 
 Checkout the code for cluster launching from private repo.
 
@@ -44,13 +61,13 @@ Run the launcher
 .. code-block:: python
 
    from cluster import ec2
-   manager = ec2.launch(n=1, instance_type='t2.micro')
+   manager = ec2.launch(n=1, instance_type='t2.micro',keyname=<YOUR_KEY_NAME>,key_filename=<YOUR_PEM_FILE>)
 
 Browse to notebook when manager is ready. *https://manager.public_ip_address:8888*
 
 To Do
 =====
-
+* Monitor in seperate thread
 * Secure connections
 * Automate launch notebook in browser
 * Include spot request features

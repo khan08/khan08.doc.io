@@ -165,7 +165,7 @@
 <span id="cluster-ec2-module"></span><h2>cluster.ec2 module<a class="headerlink" href="#module-cluster.ec2" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="cluster.ec2.launch">
-<code class="descclassname">cluster.ec2.</code><code class="descname">launch</code><span class="sig-paren">(</span><em>n, instance_type, image_id='ami-f4cc1de2', keyname='dask', sgs=['default']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster/ec2.html#launch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cluster.ec2.launch" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">cluster.ec2.</code><code class="descname">launch</code><span class="sig-paren">(</span><em>n, instance_type, keyname, key_filename, image_id='ami-f4cc1de2', sgs=['default']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster/ec2.html#launch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cluster.ec2.launch" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function helps user to launch a dask cluster on aws.
 It will launch a t2.micro type instance as the manager node, and launch custom instances as worker nodes.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -175,8 +175,9 @@ It will launch a t2.micro type instance as the manager node, and launch custom i
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>n</strong> &#8211; The number of worker instances</li>
 <li><strong>instance_type</strong> &#8211; The type of the worker instances</li>
-<li><strong>image_id</strong> &#8211; The operating system of the worker instances</li>
 <li><strong>keyname</strong> &#8211; The ssh key name of the manager instance</li>
+<li><strong>key_filename</strong> &#8211; The .pem path. For example, /.ssh/mykey.pem</li>
+<li><strong>image_id</strong> &#8211; The operating system of the worker instances</li>
 <li><strong>sgs</strong> &#8211; The security group of the manager and worker instance</li>
 </ul>
 </td>
@@ -187,6 +188,16 @@ It will launch a t2.micro type instance as the manager node, and launch custom i
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="cluster.ec2.ssh">
+<code class="descclassname">cluster.ec2.</code><code class="descname">ssh</code><span class="sig-paren">(</span><em>command</em>, <em>host</em>, <em>key_filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster/ec2.html#ssh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cluster.ec2.ssh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="cluster.ec2.wait_ssh_ready">
+<code class="descclassname">cluster.ec2.</code><code class="descname">wait_ssh_ready</code><span class="sig-paren">(</span><em>ip</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster/ec2.html#wait_ssh_ready"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cluster.ec2.wait_ssh_ready" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-cluster.ec2Config">
