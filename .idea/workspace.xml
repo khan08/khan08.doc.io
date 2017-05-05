@@ -2,59 +2,39 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a9deebf8-639c-4b38-8b96-6f26494949c3" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.buildinfo" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.nojekyll" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_modules/cluster/ec2.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_modules/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_sources/cluster.rst.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_sources/index.rst.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_sources/modules.rst.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/ajax-loader.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/alabaster.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/basic.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/comment-bright.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/comment-close.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/comment.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/css/badge_only.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/css/theme.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/custom.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/doctools.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/down-pressed.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/down.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/file.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/fonts/Inconsolata-Bold.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/fonts/Inconsolata-Regular.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/fonts/Lato-Bold.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/fonts/Lato-Regular.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/fonts/RobotoSlab-Bold.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/fonts/RobotoSlab-Regular.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/fonts/fontawesome-webfont.eot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/fonts/fontawesome-webfont.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/fonts/fontawesome-webfont.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/fonts/fontawesome-webfont.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/jquery-3.1.0.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/jquery.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/js/modernizr.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/js/theme.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/minus.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/plus.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/pygments.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/searchtools.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/underscore-1.3.1.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/underscore.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/up-pressed.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/up.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/_static/websupport.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cluster.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/genindex.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/modules.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/objects.inv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/py-modindex.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/search.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/searchindex.js" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="C:/daskec2/docs/source/cluster_doc.rst" />
+      <change type="MOVED" beforePath="C:/daskec2/clusterAPI/cluster/utility/ssh_utitlity.py" afterPath="C:/daskec2/clusterAPI/cluster/utility/ssh_utility.py" />
+      <change type="MODIFICATION" beforePath="C:/daskec2/clusterAPI/cluster/ec2.py" afterPath="C:/daskec2/clusterAPI/cluster/ec2.py" />
+      <change type="MODIFICATION" beforePath="C:/daskec2/clusterAPI/cluster/ec2Config.py" afterPath="C:/daskec2/clusterAPI/cluster/ec2Config.py" />
+      <change type="MODIFICATION" beforePath="C:/daskec2/docs/source/index.rst" afterPath="C:/daskec2/docs/source/index.rst" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/khan08.doc.io.iml" afterPath="$PROJECT_DIR$/.idea/khan08.doc.io.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_modules/cluster/ec2.html" afterPath="$PROJECT_DIR$/_modules/cluster/ec2.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_modules/index.html" afterPath="$PROJECT_DIR$/_modules/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_sources/cluster.rst.txt" afterPath="$PROJECT_DIR$/_sources/cluster.rst.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_sources/modules.rst.txt" afterPath="$PROJECT_DIR$/_sources/modules.rst.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/basic.css" afterPath="$PROJECT_DIR$/_static/basic.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/css/badge_only.css" afterPath="$PROJECT_DIR$/_static/css/badge_only.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/css/theme.css" afterPath="$PROJECT_DIR$/_static/css/theme.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/doctools.js" afterPath="$PROJECT_DIR$/_static/doctools.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/fonts/fontawesome-webfont.svg" afterPath="$PROJECT_DIR$/_static/fonts/fontawesome-webfont.svg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/jquery-3.1.0.js" afterPath="$PROJECT_DIR$/_static/jquery-3.1.0.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/jquery.js" afterPath="$PROJECT_DIR$/_static/jquery.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/js/modernizr.min.js" afterPath="$PROJECT_DIR$/_static/js/modernizr.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/js/theme.js" afterPath="$PROJECT_DIR$/_static/js/theme.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/searchtools.js" afterPath="$PROJECT_DIR$/_static/searchtools.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/underscore-1.3.1.js" afterPath="$PROJECT_DIR$/_static/underscore-1.3.1.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/underscore.js" afterPath="$PROJECT_DIR$/_static/underscore.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/websupport.js" afterPath="$PROJECT_DIR$/_static/websupport.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cluster.html" afterPath="$PROJECT_DIR$/cluster.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cluster_doc.html" afterPath="$PROJECT_DIR$/cluster_doc.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/genindex.html" afterPath="$PROJECT_DIR$/genindex.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules.html" afterPath="$PROJECT_DIR$/modules.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/py-modindex.html" afterPath="$PROJECT_DIR$/py-modindex.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/search.html" afterPath="$PROJECT_DIR$/search.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -76,6 +56,7 @@
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -100,6 +81,38 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="daskec2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="docs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="source" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="khan08.github.io" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="daskec2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clusterAPI" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="khan08.github.io" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="khan08.github.io" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -110,7 +123,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="C:/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -129,7 +142,24 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python docs.sphinx task in source">
+    <configuration default="false" name="sphinx task in source" type="docs" factoryName="Sphinx task" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="C:/daskec2/docs" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="daskec2" />
+      <option name="docutils_input_file" value="C:/daskec2/docs/source" />
+      <option name="docutils_output_file" value="C:\khan08.github.io" />
+      <option name="docutils_params" value="" />
+      <option name="docutils_task" value="html" />
+      <option name="docutils_open_in_browser" value="false" />
+      <method />
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -158,6 +188,23 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="khan08.doc.io" />
+      <method />
+    </configuration>
+    <configuration default="true" type="docs" factoryName="Sphinx task">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="khan08.doc.io" />
+      <option name="docutils_input_file" value="" />
+      <option name="docutils_output_file" value="" />
+      <option name="docutils_params" value="" />
+      <option name="docutils_task" value="" />
+      <option name="docutils_open_in_browser" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="Doctests">
@@ -194,9 +241,38 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method />
     </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Python docs.sphinx task in source" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Python docs.sphinx task in source" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration" cleanupOnStartRun="true">
+    <configuration>C:\Users\Kang\AppData\Roaming\Subversion</configuration>
+  </component>
+  <component name="SvnFileUrlMappingImpl">
+    <option name="myMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\daskec2" />
+          <option name="myCopyRoot" value="C:\daskec2" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+    <option name="myMoreRealMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\daskec2" />
+          <option name="myCopyRoot" value="C:\daskec2" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -213,21 +289,21 @@
     <layout>
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
