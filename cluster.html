@@ -165,7 +165,7 @@
 <span id="cluster-ec2-module"></span><h2>cluster.ec2 module<a class="headerlink" href="#module-cluster.ec2" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="cluster.ec2.launch">
-<code class="descclassname">cluster.ec2.</code><code class="descname">launch</code><span class="sig-paren">(</span><em>n, instance_type, keyname, key_filename, image_id='ami-f4cc1de2', sgs=['default']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster/ec2.html#launch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cluster.ec2.launch" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">cluster.ec2.</code><code class="descname">launch</code><span class="sig-paren">(</span><em>instance_type, keyname, key_filename, workers=0, ami_id='ami-f4cc1de2', sgs=['default'], browser=True, mode='single'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster/ec2.html#launch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cluster.ec2.launch" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function helps user to launch a dask cluster on aws.
 It will launch a t2.micro type instance as the manager node, and launch custom instances as worker nodes.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -173,12 +173,14 @@ It will launch a t2.micro type instance as the manager node, and launch custom i
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>n</strong> &#8211; The number of worker instances</li>
 <li><strong>instance_type</strong> &#8211; The type of the worker instances</li>
 <li><strong>keyname</strong> &#8211; The ssh key name of the manager instance</li>
 <li><strong>key_filename</strong> &#8211; The .pem path. For example, /.ssh/mykey.pem</li>
-<li><strong>image_id</strong> &#8211; The operating system of the worker instances</li>
+<li><strong>workers</strong> &#8211; The number of worker instances in dask cluster.For now, it is ignored when mode is not dask</li>
+<li><strong>ami_id</strong> &#8211; The operating system of the worker instances. Defaults to ubuntu, if mode gpu then ignore and use bitfusion image</li>
 <li><strong>sgs</strong> &#8211; The security group of the manager and worker instance</li>
+<li><strong>browser</strong> &#8211; Defaults to True. Open notebook in browser, no browser if set to False</li>
+<li><strong>mode</strong> &#8211; Options: &#8216;dask&#8217;,&#8217;single&#8217;. Defaults to single.</li>
 </ul>
 </td>
 </tr>
@@ -190,13 +192,8 @@ It will launch a t2.micro type instance as the manager node, and launch custom i
 </dd></dl>
 
 <dl class="function">
-<dt id="cluster.ec2.ssh">
-<code class="descclassname">cluster.ec2.</code><code class="descname">ssh</code><span class="sig-paren">(</span><em>command</em>, <em>host</em>, <em>key_filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster/ec2.html#ssh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cluster.ec2.ssh" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="cluster.ec2.wait_ssh_ready">
-<code class="descclassname">cluster.ec2.</code><code class="descname">wait_ssh_ready</code><span class="sig-paren">(</span><em>ip</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster/ec2.html#wait_ssh_ready"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cluster.ec2.wait_ssh_ready" title="Permalink to this definition">¶</a></dt>
+<dt id="cluster.ec2.upload">
+<code class="descclassname">cluster.ec2.</code><code class="descname">upload</code><span class="sig-paren">(</span><em>manager</em>, <em>key_filename</em>, <em>localdir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster/ec2.html#upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cluster.ec2.upload" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -255,7 +252,7 @@ It will launch a t2.micro type instance as the manager node, and launch custom i
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

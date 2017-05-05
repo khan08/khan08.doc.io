@@ -89,6 +89,7 @@
 <li><a class="reference internal" href="#">Welcome to daskEc2&#8217;s documentation!</a></li>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li><a class="reference internal" href="#mode">MODE</a></li>
 <li><a class="reference internal" href="#to-do">To Do</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
@@ -195,12 +196,20 @@ You need to use <a class="reference internal" href="cluster.html#cluster.ec2.lau
 <div class="highlight-bash"><div class="highlight"><pre>svn checkout https://weih.unfuddle.com/svn/weih_cheq/branches/daskec2/clusterAPI/cluster <span class="o">[</span>local-path<span class="o">]</span>
 </pre></div>
 </div>
-<p>Run the launcher</p>
+<p>Launch a single t2.micro ubuntu instance.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">cluster</span> <span class="kn">import</span> <span class="n">ec2</span>
-<span class="n">manager</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">instance_type</span><span class="o">=</span><span class="s1">&#39;t2.micro&#39;</span><span class="p">,</span><span class="n">keyname</span><span class="o">=&lt;</span><span class="n">YOUR_KEY_NAME</span><span class="o">&gt;</span><span class="p">,</span><span class="n">key_filename</span><span class="o">=&lt;</span><span class="n">YOUR_PEM_FILE</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="n">manager</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">instance_type</span><span class="o">=</span><span class="s1">&#39;t2.micro&#39;</span><span class="p">,</span><span class="n">keyname</span><span class="o">=&lt;</span><span class="n">YOUR_KEY_NAME</span><span class="o">&gt;</span><span class="p">,</span><span class="n">key_filename</span><span class="o">=&lt;</span><span class="n">YOUR_PEM_FILE</span><span class="o">&gt;</span><span class="p">,</span><span class="n">ami_id</span><span class="o">=</span><span class="n">ami</span><span class="o">-</span><span class="n">f4cc1de2</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Browse to notebook when manager is ready. <em>https://manager.public_ip_address:8888</em></p>
+<p>Notebook will be opened in browser when ready. Or browse to notebook manually. <em>https://manager.public_ip_address:8888</em></p>
+</div>
+<div class="section" id="mode">
+<h1>MODE<a class="headerlink" href="#mode" title="Permalink to this headline">¶</a></h1>
+<p>There are three modes for launching the cluster in aws:</p>
+<ul class="simple">
+<li>single mode:    Launches a custom single instance on aws.</li>
+<li><a class="reference internal" href="cluster_doc.html"><span class="doc">&lt;no title&gt;</span></a>:   Launches dask cluster on aws.</li>
+</ul>
 </div>
 <div class="section" id="to-do">
 <h1>To Do<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h1>
@@ -266,7 +275,7 @@ You need to use <a class="reference internal" href="cluster.html#cluster.ec2.lau
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

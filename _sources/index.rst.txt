@@ -56,14 +56,22 @@ Checkout the code for cluster launching from private repo.
 
    svn checkout https://weih.unfuddle.com/svn/weih_cheq/branches/daskec2/clusterAPI/cluster [local-path]
 
-Run the launcher
+Launch a single t2.micro ubuntu instance.
 
 .. code-block:: python
 
    from cluster import ec2
-   manager = ec2.launch(n=1, instance_type='t2.micro',keyname=<YOUR_KEY_NAME>,key_filename=<YOUR_PEM_FILE>)
+   manager = ec2.launch(instance_type='t2.micro',keyname=<YOUR_KEY_NAME>,key_filename=<YOUR_PEM_FILE>,ami_id=ami-f4cc1de2,mode='single')
 
-Browse to notebook when manager is ready. *https://manager.public_ip_address:8888*
+Notebook will be opened in browser when ready. Or browse to notebook manually. *https://manager.public_ip_address:8888*
+
+MODE
+====
+
+There are three modes for launching the cluster in aws:
+
+* single mode:    Launches a custom single instance on aws.
+* :doc:`cluster_doc`:   Launches dask cluster on aws.
 
 To Do
 =====
